@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://da4ewd4l026uw"]
+
+[ext_resource type="PackedScene" uid="uid://kt3wfep3p7sh" path="res://src/MSTDungeon/MSTDungeon.tscn" id="1_w0onb"]
+[ext_resource type="PackedScene" uid="uid://cs8c3nq4yqack" path="res://src/player.tscn" id="2_qaf0k"]
+
+[node name="Game" type="Node2D"]
+
+[node name="MSTDungeon" parent="." instance=ExtResource("1_w0onb")]
+
+[node name="Player" parent="." instance=ExtResource("2_qaf0k")]
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
+remote_path = NodePath("../../Camera2D")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0, 0, 0, 1)

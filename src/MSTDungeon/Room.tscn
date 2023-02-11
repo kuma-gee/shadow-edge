@@ -7,11 +7,13 @@ resource_local_to_scene = true
 size = Vector2(16, 20)
 
 [node name="Room" type="RigidBody2D"]
+collision_layer = 32768
+collision_mask = 32768
 gravity_scale = 0.0
 lock_rotation = true
 script = ExtResource("1_p8h32")
-min_room_size = 4
-max_room_size = 12
+min_room_size = 8
+max_room_size = 20
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_4mgh2")
