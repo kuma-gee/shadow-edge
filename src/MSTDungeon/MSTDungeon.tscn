@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://kt3wfep3p7sh"]
+
+[ext_resource type="Script" path="res://src/MSTDungeon/MSTDungeon.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://b5ewv6tjqycpr" path="res://_sprites/0x72_DungeonTilesetII_v1.4/frames/floor_1.png" id="2_ayl7n"]
+[ext_resource type="Script" path="res://src/MSTDungeon/LegacyTileMap.gd" id="3_4kjf5"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wxnct"]
+texture = ExtResource("2_ayl7n")
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_5uv3h"]
+sources/0 = SubResource("TileSetAtlasSource_wxnct")
+
+[node name="MSTDungeon" type="Node2D"]
+script = ExtResource("2")
+max_rooms = 100
+reconnection_factor = 0.0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.5, 0.5)
+
+[node name="Level" type="TileMap" parent="."]
+show_behind_parent = true
+texture_filter = 1
+tile_set = SubResource("TileSet_5uv3h")
+format = 2
+script = ExtResource("3_4kjf5")
+
+[node name="Rooms" type="Node2D" parent="."]

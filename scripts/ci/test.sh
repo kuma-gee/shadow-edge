@@ -1,3 +1,3 @@
 #!/bin/sh
 
-godot -s addons/gut/gut_cmdln.gd
+godot4 -s addons/gut/gut_cmdln.gd
