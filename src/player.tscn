@@ -11,10 +11,11 @@ size = Vector2(12, 10)
 script = ExtResource("1_s6hgx")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -6)
 texture = ExtResource("1_3dmgp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 9)
+position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_6kgdh")
 
 [node name="PlayerInput" type="Node" parent="."]

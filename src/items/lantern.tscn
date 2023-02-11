@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://sfh5avjmsm4m"]
+
+[ext_resource type="Texture2D" uid="uid://wo48ljy3bl7k" path="res://assets/light_circle.png" id="1_d6hjv"]
+
+[node name="Lantern" type="Node2D"]
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+color = Color(0.92549, 0.8, 0.647059, 1)
+texture = ExtResource("1_d6hjv")
