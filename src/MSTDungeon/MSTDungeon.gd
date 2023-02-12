@@ -13,6 +13,15 @@ extends Node2D
 signal rooms_placed
 
 const Room := preload("Room.tscn")
+const FLOOR_ID = 6
+const FLOOR_TILES = {
+	Vector2i(0, 0): 0.7,
+	Vector2i(1, 0): 0.05,
+	Vector2i(2, 0): 0.1,
+	Vector2i(0, 1): 0.01,
+	Vector2i(1, 1): 0.1,
+	Vector2i(2, 1): 0.01,
+}
 
 # Maximum number of generated rooms.
 @export var max_rooms := 60
@@ -100,9 +109,23 @@ func _generate() -> void:
 	await rooms_placed
 	
 	rooms.queue_free()
+	
+	var total_weight = 0.0
+	var accum_weights = {}
+	
+	for pos in FLOOR_TILES:
+		total_weight += FLOOR_TILES[pos]
+		accum_weights[pos] = total_weight
+	
 	level.clear()
 	for point in _data:
-		level.set_cell(0, point, 0, Vector2.ZERO)
+		var rand_num = _rng.randf_range(0.0, total_weight)
+		var selected = Vector2.ZERO
+		for pos in accum_weights:
+			if accum_weights[pos] > rand_num:
+				selected = pos
+				break
+		level.set_cell(0, point, FLOOR_ID, selected)
 
 # Adds room tile positions to `_data`.
 func _add_room(room: MSTDungeonRoom) -> void:
