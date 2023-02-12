@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dmmd7wp77nwoi"]
+[gd_scene load_steps=6 format=3 uid="uid://dmmd7wp77nwoi"]
 
 [ext_resource type="Script" path="res://src/player/arrow.gd" id="1_1rxca"]
 [ext_resource type="Texture2D" uid="uid://wo48ljy3bl7k" path="res://assets/light_circle.png" id="1_3mgvo"]
 [ext_resource type="Texture2D" uid="uid://b6fi06afnaeup" path="res://assets/weapon_arrow.png" id="3_emoog"]
+[ext_resource type="Script" path="res://shared/effect/Effect.gd" id="3_p077d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wm47i"]
 size = Vector2(6, 20)
@@ -19,5 +20,18 @@ color = Color(0.92549, 0.8, 0.647059, 1)
 blend_mode = 2
 texture = ExtResource("1_3mgvo")
 
+[node name="Effect" type="Node" parent="PointLight2D"]
+script = ExtResource("3_p077d")
+duration = 3.0
+autostart = false
+property = "texture_scale"
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("3_emoog")
+
+[node name="FreeTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[connection signal="finished" from="PointLight2D/Effect" to="." method="_on_effect_finished"]
+[connection signal="timeout" from="FreeTimer" to="." method="_on_free_timer_timeout"]
