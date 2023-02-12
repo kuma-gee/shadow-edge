@@ -6,4 +6,5 @@
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
 color = Color(0.92549, 0.8, 0.647059, 1)
+blend_mode = 2
 texture = ExtResource("1_d6hjv")
