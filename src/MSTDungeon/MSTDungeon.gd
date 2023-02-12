@@ -11,6 +11,7 @@ extends Node2D
 
 # Emitted when all the rooms stabilized.
 signal rooms_placed
+signal genereated
 
 const Room := preload("Room.tscn")
 const FLOOR_ID = 6
@@ -42,6 +43,23 @@ var _draw_extra := []
 
 @onready var rooms: Node2D = $Rooms
 @onready var level: TileMap = $Level
+
+func get_least_connected_position():
+	var least_connected_id = null
+	var least_connections = INF
+	
+	for id in _path.get_point_ids():
+		var connections = _path.get_point_connections(id)
+		var total_conections = connections.size()
+		
+		for c in connections:
+			total_conections += _path.get_point_connections(c).size()
+		
+		if least_connected_id == null or total_conections < least_connections:
+			least_connected_id = id
+			least_connections = total_conections
+	
+	return _path.get_point_position(least_connected_id)
 
 
 func _ready() -> void:
@@ -132,6 +150,8 @@ func _generate() -> void:
 		level.set_cell(FLOOR_LAYER, point, FLOOR_ID, selected)
 	
 	_fill_walls()
+	queue_redraw()
+	genereated.emit()
 
 # Adds room tile positions to `_data`.
 func _add_room(room: MSTDungeonRoom) -> void:
@@ -239,3 +259,17 @@ func _get_all_surrounding_cells(cell: Vector2i):
 	for n in neighbors:
 		result.append(level.get_neighbor_cell(cell, n))
 	return result
+
+func _draw():
+	if _path == null:
+		return
+
+	for point1_id in _path.get_point_ids():
+		var point1_position := _path.get_point_position(point1_id)
+		for point2_id in _path.get_point_connections(point1_id):
+			var point2_position := _path.get_point_position(point2_id)
+			draw_line(point1_position, point2_position, Color.RED, 20)
+
+	if not _draw_extra.is_empty():
+		for pair in _draw_extra:
+			draw_line(pair[0], pair[1], Color.GREEN, 20)

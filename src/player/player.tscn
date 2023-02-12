@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://cm6r1ubw5mxge"]
+[gd_scene load_steps=7 format=3 uid="uid://cm6r1ubw5mxge"]
 
 [ext_resource type="Texture2D" uid="uid://cf7beeukibts4" path="res://assets/elf_m_idle_anim_f0.png" id="1_3dmgp"]
 [ext_resource type="Script" path="res://src/player/player.gd" id="1_xj6ay"]
 [ext_resource type="PackedScene" uid="uid://dmmd7wp77nwoi" path="res://src/player/arrow.tscn" id="2_wlon3"]
 [ext_resource type="Script" path="res://addons/input-system/PlayerInput.gd" id="3_soyvn"]
+[ext_resource type="PackedScene" uid="uid://sfh5avjmsm4m" path="res://src/items/lantern.tscn" id="5_17ulj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6kgdh"]
 size = Vector2(12, 10)
@@ -23,5 +24,9 @@ shape = SubResource("RectangleShape2D_6kgdh")
 
 [node name="PlayerInput" type="Node" parent="."]
 script = ExtResource("3_soyvn")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Lantern" parent="." instance=ExtResource("5_17ulj")]
 
 [connection signal="just_pressed" from="PlayerInput" to="." method="_on_player_input_just_pressed"]

@@ -1,22 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://c7d5wo2c1qrbw"]
+[gd_scene load_steps=3 format=3 uid="uid://c7d5wo2c1qrbw"]
 
+[ext_resource type="Script" path="res://src/game.gd" id="1_aatr2"]
 [ext_resource type="PackedScene" uid="uid://kt3wfep3p7sh" path="res://src/MSTDungeon/MSTDungeon.tscn" id="1_w0onb"]
-[ext_resource type="PackedScene" uid="uid://cm6r1ubw5mxge" path="res://src/player/player.tscn" id="2_fu66b"]
-[ext_resource type="PackedScene" uid="uid://sfh5avjmsm4m" path="res://src/items/lantern.tscn" id="3_8jchv"]
 
 [node name="Game" type="Node2D"]
+script = ExtResource("1_aatr2")
 
 [node name="MSTDungeon" parent="." instance=ExtResource("1_w0onb")]
-
-[node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 visible = false
 color = Color(0, 0, 0, 1)
 
-[node name="Player" parent="." instance=ExtResource("2_fu66b")]
-
-[node name="Lantern" parent="Player" instance=ExtResource("3_8jchv")]
-
-[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
-remote_path = NodePath("../../Camera2D")
+[connection signal="genereated" from="MSTDungeon" to="." method="_on_mst_dungeon_genereated"]
