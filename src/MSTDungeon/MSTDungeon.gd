@@ -190,8 +190,23 @@ func _add_corridor(start: int, end: int, constant: int, axis: int) -> void:
 			):
 				_add_room(room)
 				t = bottom_right[axis]
-		_data[point] = null
+		
+		_add_corridor_point(point, axis)
 
+func _add_corridor_point(point: Vector2, axis: int):
+	var points = [point]
+	
+	match axis:
+		Vector2.AXIS_X:
+			points.append(Vector2(point.x, point.y + 1))
+			points.append(Vector2(point.x, point.y - 1))
+		Vector2.AXIS_Y:
+			points.append(Vector2(point.x + 1, point.y))
+			points.append(Vector2(point.x - 1, point.y))
+	
+	for p in points:
+		_data[p] = null
+	
 
 func _is_main_room(room: MSTDungeonRoom) -> bool:
 	return room.size.x > _mean_room_size.x and room.size.y > _mean_room_size.y

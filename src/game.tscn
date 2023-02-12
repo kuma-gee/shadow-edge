@@ -17,3 +17,6 @@ color = Color(0, 0, 0, 1)
 [node name="Player" parent="." instance=ExtResource("2_fu66b")]
 
 [node name="Lantern" parent="Player" instance=ExtResource("3_8jchv")]
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Player"]
+remote_path = NodePath("../../Camera2D")

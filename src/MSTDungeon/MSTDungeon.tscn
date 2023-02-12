@@ -366,7 +366,6 @@ sources/3 = SubResource("TileSetAtlasSource_3p60o")
 
 [node name="MSTDungeon" type="Node2D"]
 script = ExtResource("2")
-max_rooms = 50
 reconnection_factor = 0.0
 
 [node name="Level" type="TileMap" parent="."]
