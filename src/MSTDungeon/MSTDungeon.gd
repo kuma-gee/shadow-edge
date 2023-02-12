@@ -22,6 +22,10 @@ const FLOOR_TILES = {
 	Vector2i(1, 1): 0.1,
 	Vector2i(2, 1): 0.01,
 }
+const FLOOR_LAYER = 0
+
+const WALL_TERRAIN_SET = 0
+const WALL_TERRAIN = 0
 
 # Maximum number of generated rooms.
 @export var max_rooms := 60
@@ -125,7 +129,9 @@ func _generate() -> void:
 			if accum_weights[pos] > rand_num:
 				selected = pos
 				break
-		level.set_cell(0, point, FLOOR_ID, selected)
+		level.set_cell(FLOOR_LAYER, point, FLOOR_ID, selected)
+	
+	_fill_walls()
 
 # Adds room tile positions to `_data`.
 func _add_room(room: MSTDungeonRoom) -> void:
@@ -189,3 +195,32 @@ func _add_corridor(start: int, end: int, constant: int, axis: int) -> void:
 
 func _is_main_room(room: MSTDungeonRoom) -> bool:
 	return room.size.x > _mean_room_size.x and room.size.y > _mean_room_size.y
+
+func _fill_walls():
+	var cells = level.get_used_cells(FLOOR_LAYER)
+	var wall_cells = []
+	
+	for cell in cells:
+		var potential_walls = _get_all_surrounding_cells(cell)
+		for potential_wall in potential_walls:
+			if not potential_wall in cells:
+				wall_cells.append(potential_wall)
+	
+	level.set_cells_terrain_connect(FLOOR_LAYER, wall_cells, WALL_TERRAIN_SET, WALL_TERRAIN)
+
+func _get_all_surrounding_cells(cell: Vector2i):
+	var neighbors = [
+		TileSet.CELL_NEIGHBOR_RIGHT_SIDE,
+		TileSet.CELL_NEIGHBOR_LEFT_SIDE,
+		TileSet.CELL_NEIGHBOR_BOTTOM_SIDE,
+		TileSet.CELL_NEIGHBOR_TOP_SIDE,
+		TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER,
+		TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER,
+		TileSet.CELL_NEIGHBOR_TOP_LEFT_CORNER,
+		TileSet.CELL_NEIGHBOR_TOP_RIGHT_CORNER
+	]
+	
+	var result = []
+	for n in neighbors:
+		result.append(level.get_neighbor_cell(cell, n))
+	return result
