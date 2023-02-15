@@ -14,7 +14,7 @@ signal rooms_placed
 signal genereated
 
 const Room := preload("Room.tscn")
-const FLOOR_ID = 6
+const FLOOR_ID = 2
 const FLOOR_TILES = {
 	Vector2i(0, 0): 0.7,
 	Vector2i(1, 0): 0.05,

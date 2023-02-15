@@ -30,6 +30,7 @@ gdscript/warnings/return_value_discarded=false
 
 window/size/viewport_width=960
 window/size/viewport_height=540
+window/stretch/mode="canvas_items"
 window/size/width=1920
 window/size/height=1080
 
