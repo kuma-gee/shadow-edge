@@ -28,6 +28,8 @@ const FLOOR_LAYER = 0
 const WALL_TERRAIN_SET = 0
 const WALL_TERRAIN = 0
 
+const WALL_SIZE = Vector2i(20, 20)
+
 # Maximum number of generated rooms.
 @export var max_rooms := 60
 # Controls the number of paths we add to the dungeon after generating it,
@@ -232,14 +234,17 @@ func _is_main_room(room: MSTDungeonRoom) -> bool:
 	return room.size.x > _mean_room_size.x and room.size.y > _mean_room_size.y
 
 func _fill_walls():
-	var cells = level.get_used_cells(FLOOR_LAYER)
+	var rect = level.get_used_rect()
 	var wall_cells = []
+	var start = rect.position - WALL_SIZE
+	var end = rect.end + WALL_SIZE
 	
-	for cell in cells:
-		var potential_walls = _get_all_surrounding_cells(cell)
-		for potential_wall in potential_walls:
-			if not potential_wall in cells:
-				wall_cells.append(potential_wall)
+	for x in range(start.x, end.x):
+		for y in range(start.y, end.y):
+			var pos = Vector2(x, y)
+			var source_id = level.get_cell_source_id(FLOOR_LAYER, pos)
+			if source_id == -1:
+				wall_cells.append(pos)
 	
 	level.set_cells_terrain_connect(FLOOR_LAYER, wall_cells, WALL_TERRAIN_SET, WALL_TERRAIN)
 
