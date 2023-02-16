@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://6rrbd3ehs0ba"]
+[gd_scene load_steps=5 format=3 uid="uid://6rrbd3ehs0ba"]
 
 [ext_resource type="Script" path="res://src/player/bow.gd" id="1_harcl"]
 [ext_resource type="Texture2D" uid="uid://lwpvifjyug5q" path="res://assets/weapon_bow.png" id="1_ohgio"]
 [ext_resource type="PackedScene" uid="uid://dmmd7wp77nwoi" path="res://src/player/arrow.tscn" id="2_hggyl"]
+[ext_resource type="Texture2D" uid="uid://b6fi06afnaeup" path="res://assets/weapon_arrow.png" id="4_2cb5b"]
 
 [node name="Bow" type="Node2D"]
 script = ExtResource("1_harcl")
@@ -12,6 +13,12 @@ arrow_scene = ExtResource("2_hggyl")
 rotation = -1.5708
 texture = ExtResource("1_ohgio")
 
+[node name="Arrow" type="Sprite2D" parent="."]
+position = Vector2(0, -1)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("4_2cb5b")
+
 [node name="FireRate" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="timeout" from="FireRate" to="." method="_on_fire_rate_timeout"]

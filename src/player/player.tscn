@@ -25,6 +25,7 @@ shape = SubResource("RectangleShape2D_6kgdh")
 script = ExtResource("3_soyvn")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.2, 1.2)
 
 [node name="Lantern" parent="." instance=ExtResource("5_17ulj")]
 
