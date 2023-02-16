@@ -10,8 +10,7 @@ extends CharacterBody2D
 var stopped = false
 
 func _ready():
-	velocity = dir * speed
-	rotation = dir.angle_to(Vector2.UP) * -1
+	velocity = dir.rotated(global_rotation) * speed
 
 func _physics_process(delta):
 	velocity = velocity.move_toward(Vector2.ZERO, deaccel * delta)

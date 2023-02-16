@@ -2,9 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://cf7beeukibts4" path="res://assets/elf_m_idle_anim_f0.png" id="1_3dmgp"]
 [ext_resource type="Script" path="res://src/player/player.gd" id="1_xj6ay"]
-[ext_resource type="PackedScene" uid="uid://dmmd7wp77nwoi" path="res://src/player/arrow.tscn" id="2_wlon3"]
 [ext_resource type="Script" path="res://addons/input-system/PlayerInput.gd" id="3_soyvn"]
 [ext_resource type="PackedScene" uid="uid://sfh5avjmsm4m" path="res://src/items/lantern.tscn" id="5_17ulj"]
+[ext_resource type="PackedScene" uid="uid://6rrbd3ehs0ba" path="res://src/player/bow.tscn" id="6_r7kyl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6kgdh"]
 size = Vector2(12, 10)
@@ -12,7 +12,6 @@ size = Vector2(12, 10)
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
 script = ExtResource("1_xj6ay")
-arrow_scene = ExtResource("2_wlon3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -6)
@@ -28,5 +27,10 @@ script = ExtResource("3_soyvn")
 [node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="Lantern" parent="." instance=ExtResource("5_17ulj")]
+
+[node name="Hand" type="Node2D" parent="."]
+
+[node name="Bow" parent="Hand" instance=ExtResource("6_r7kyl")]
+position = Vector2(0, -8)
 
 [connection signal="just_pressed" from="PlayerInput" to="." method="_on_player_input_just_pressed"]

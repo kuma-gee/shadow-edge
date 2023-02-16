@@ -1,11 +1,13 @@
 extends CharacterBody2D
 
 @export var speed := 200
-@export var arrow_scene: PackedScene
 
 @onready var input := $PlayerInput
+@onready var hand := $Hand
 
-
+func _process(delta):
+	var dir = global_position.direction_to(get_global_mouse_position())
+	hand.rotation = dir.angle_to(Vector2.UP) * -1
 
 func _physics_process(delta):
 	var motion = Vector2(
@@ -19,8 +21,4 @@ func _physics_process(delta):
 
 func _on_player_input_just_pressed(ev: InputEvent):
 	if ev.is_action_pressed("fire"):
-		var arrow = arrow_scene.instantiate()
-		var dir = global_position.direction_to(get_global_mouse_position())
-		arrow.dir = dir
-		arrow.global_position = global_position
-		get_tree().current_scene.add_child(arrow)
+		hand.get_child(0).fire()
