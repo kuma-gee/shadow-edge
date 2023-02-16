@@ -11,3 +11,7 @@ arrow_scene = ExtResource("2_hggyl")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 rotation = -1.5708
 texture = ExtResource("1_ohgio")
+
+[node name="FireRate" type="Timer" parent="."]
+
+[connection signal="timeout" from="FireRate" to="." method="_on_fire_rate_timeout"]
