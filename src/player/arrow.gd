@@ -6,6 +6,7 @@ extends CharacterBody2D
 
 @onready var light_effect: Effect = $PointLight2D/Effect
 @onready var free_timer: Timer = $FreeTimer
+@onready var decrease_timer: Timer = $DecreaseTimer
 
 var stopped = false
 
@@ -22,8 +23,7 @@ func _physics_process(delta):
 
 func _process(delta):
 	if velocity.length() == 0 and not stopped:
-		light_effect.end_value = 0.0
-		light_effect.start()
+		decrease_timer.start()
 		stopped = true
 
 func _on_effect_finished():
@@ -32,3 +32,9 @@ func _on_effect_finished():
 
 func _on_free_timer_timeout():
 	queue_free()
+
+
+func _on_decrease_timer_timeout():
+	light_effect.end_value = 0.0
+	light_effect.start()
+
