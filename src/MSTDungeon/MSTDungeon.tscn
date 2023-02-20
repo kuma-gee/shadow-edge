@@ -530,6 +530,7 @@ texture_filter = 1
 tile_set = SubResource("TileSet_5uv3h")
 cell_quadrant_size = 32
 format = 2
+layer_0/tile_data = PackedInt32Array(-3, 524289, 0, 65533, 524289, 3, 65534, 720897, 3, -2, 393217, 0, -1, 131073, 3, -65536, 131073, 3, -65535, 131073, 3, -65534, 196609, 0, 2, 196609, 2)
 script = ExtResource("3_4kjf5")
 
 [node name="Rooms" type="Node2D" parent="."]

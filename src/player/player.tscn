@@ -1,8 +1,8 @@
 [gd_scene load_steps=17 format=3 uid="uid://cm6r1ubw5mxge"]
 
 [ext_resource type="Script" path="res://src/player/player.gd" id="1_xj6ay"]
-[ext_resource type="Texture2D" uid="uid://bmnoex8pp1pdc" path="res://assets/temp/elf_m_idle_anim_f.png" id="2_1lep6"]
-[ext_resource type="Texture2D" uid="uid://lt16fubk0h6p" path="res://assets/temp/elf_m_run_anim_f.png" id="3_hxucd"]
+[ext_resource type="Texture2D" uid="uid://dpsisbweysqmy" path="res://assets/temp/elf_m_idle_anim_f.png" id="2_1lep6"]
+[ext_resource type="Texture2D" uid="uid://befxb88frxtn0" path="res://assets/temp/elf_m_run_anim_f.png" id="3_hxucd"]
 [ext_resource type="Script" path="res://addons/input-system/PlayerInput.gd" id="3_soyvn"]
 [ext_resource type="PackedScene" uid="uid://sfh5avjmsm4m" path="res://src/items/lantern.tscn" id="5_17ulj"]
 [ext_resource type="PackedScene" uid="uid://6rrbd3ehs0ba" path="res://src/player/bow.tscn" id="6_r7kyl"]
@@ -87,7 +87,7 @@ script = ExtResource("1_xj6ay")
 position = Vector2(0, -6)
 sprite_frames = SubResource("SpriteFrames_m02e2")
 animation = &"run"
-frame_progress = 0.0191016
+frame_progress = 0.288008
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)

@@ -1,0 +1,64 @@
+[gd_scene load_steps=9 format=3 uid="uid://y1asojtf1flx"]
+
+[ext_resource type="Texture2D" uid="uid://cu6awtn7d8pjs" path="res://assets/temp/floor_spikes_anim_f.png" id="1_3g1f3"]
+[ext_resource type="Script" path="res://src/MSTDungeon/spikes.gd" id="1_27afc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cm0wo"]
+atlas = ExtResource("1_3g1f3")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6hewa"]
+atlas = ExtResource("1_3g1f3")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crxlw"]
+atlas = ExtResource("1_3g1f3")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_478ob"]
+atlas = ExtResource("1_3g1f3")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xv4iv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cm0wo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6hewa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crxlw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_478ob")
+}],
+"loop": false,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_edp7h"]
+size = Vector2(14, 14)
+
+[node name="Spikes" type="Area2D"]
+script = ExtResource("1_27afc")
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_xv4iv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_edp7h")
+
+[node name="SpikeStart" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[node name="SpikeEnd" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="frame_changed" from="Sprite2D" to="." method="_on_sprite_2d_frame_changed"]
+[connection signal="timeout" from="SpikeStart" to="." method="_on_spike_start_timeout"]
+[connection signal="timeout" from="SpikeEnd" to="." method="_on_spike_end_timeout"]

@@ -1,14 +1,20 @@
 class_name LevelBuilder
 extends Node
 
+const OBSTACLES = {
+	0.2: preload("res://src/MSTDungeon/hole.tscn"),
+	1.0: preload("res://src/MSTDungeon/spikes.tscn"),
+}
+const OBSTACLE_SPAWN_CHANCE = 0.03
+
 const FLOOR_ID = 2
 const FLOOR_TILES = {
-	Vector2i(0, 0): 0.7,
-	Vector2i(1, 0): 0.05,
-	Vector2i(2, 0): 0.1,
-	Vector2i(0, 1): 0.01,
-	Vector2i(1, 1): 0.1,
-	Vector2i(2, 1): 0.01,
+	0.7: Vector2i(0, 0),
+	0.75: Vector2i(1, 0),
+	0.85: Vector2i(2, 0),
+	0.86: Vector2i(0, 1),
+	0.95: Vector2i(1, 1),
+	1.00: Vector2i(2, 1),
 }
 const FLOOR_LAYER = 0
 
@@ -21,6 +27,7 @@ const WALL_SIZE = Vector2i(20, 20)
 @export_node_path level_path
 @onready var level := get_node(level_path)
 
+var _obstacles := {}
 var _rng: RandomNumberGenerator
 
 func build_level(room_builder: RoomBuilder, rng: RandomNumberGenerator):
@@ -34,14 +41,15 @@ func build_level(room_builder: RoomBuilder, rng: RandomNumberGenerator):
 		accum_weights[pos] = total_weight
 	
 	level.clear()
-	for point in room_builder.get_level_tiles():
-		var rand_num = _rng.randf_range(0.0, total_weight)
-		var selected = Vector2.ZERO
-		for pos in accum_weights:
-			if accum_weights[pos] > rand_num:
-				selected = pos
-				break
+	for point in _data:
+		var selected = _random_item(FLOOR_TILES)
 		level.set_cell(FLOOR_LAYER, point, FLOOR_ID, selected)
+	
+	for point in _obstacles:
+		var selected = _random_item(OBSTACLES) as PackedScene
+		var obstacle = selected.instantiate()
+		level.add_child(obstacle)
+		obstacle.position = level.map_to_local(point) + Vector2(level.tile_set.tile_size / 4)
 	
 	_fill_walls()
 
@@ -59,3 +67,14 @@ func _fill_walls():
 				wall_cells.append(pos)
 	
 	level.set_cells_terrain_connect(FLOOR_LAYER, wall_cells, WALL_TERRAIN_SET, WALL_TERRAIN)
+
+
+func _random_item(weighted_items: Dictionary):
+	var rand_num = _rng.randf_range(0.0, 1.0)
+	
+	for chance in weighted_items:
+		if rand_num < chance:
+			return weighted_items[chance]
+			
+	print(rand_num)
+

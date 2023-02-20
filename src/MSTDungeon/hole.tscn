@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://73bjyb2edt0w"]
+
+[ext_resource type="Texture2D" uid="uid://bh60bv6nkxbqk" path="res://assets/temp/hole.png" id="1_ejosx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ap4y3"]
+size = Vector2(14, 14)
+
+[node name="Hole" type="Area2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_ejosx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ap4y3")

@@ -2,7 +2,23 @@ extends Node2D
 
 signal genereated
 
+const OBSTACLES = {
+	0.2: preload("res://src/MSTDungeon/hole.tscn"),
+	1.0: preload("res://src/MSTDungeon/spikes.tscn"),
+}
+const OBSTACLE_SPAWN_CHANCE = 0.03
+
 const Room := preload("Room.tscn")
+const FLOOR_ID = 2
+const FLOOR_TILES = {
+	0.7: Vector2i(0, 0),
+	0.75: Vector2i(1, 0),
+	0.85: Vector2i(2, 0),
+	0.86: Vector2i(0, 1),
+	0.95: Vector2i(1, 1),
+	1.00: Vector2i(2, 1),
+}
+const FLOOR_LAYER = 0
 
 @export var max_rooms := 60
 @export var reconnection_factor := 0.025
@@ -51,25 +67,7 @@ func _generate() -> void:
 	
 	queue_redraw()
 	genereated.emit()
-
-
-func _get_all_surrounding_cells(cell: Vector2i):
-	var neighbors = [
-		TileSet.CELL_NEIGHBOR_RIGHT_SIDE,
-		TileSet.CELL_NEIGHBOR_LEFT_SIDE,
-		TileSet.CELL_NEIGHBOR_BOTTOM_SIDE,
-		TileSet.CELL_NEIGHBOR_TOP_SIDE,
-		TileSet.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER,
-		TileSet.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER,
-		TileSet.CELL_NEIGHBOR_TOP_LEFT_CORNER,
-		TileSet.CELL_NEIGHBOR_TOP_RIGHT_CORNER
-	]
-	
-	var result = []
-	for n in neighbors:
-		result.append(level.get_neighbor_cell(cell, n))
-	return result
-
+		
 func _draw():
 	if _path == null:
 		return
