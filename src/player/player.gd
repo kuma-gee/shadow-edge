@@ -12,6 +12,7 @@ enum {
 
 @onready var input := $PlayerInput
 @onready var hand := $Hand
+@onready var sprite := $Sprite2D
 
 var _state = WALK
 
@@ -38,7 +39,14 @@ func _motion_dir():
 	).normalized()
 
 func _walk_state(delta: float):
-	velocity = _motion_dir() * speed
+	var motion = _motion_dir()
+	velocity = motion * speed
+	
+	var anim = "run" if velocity.length() > 0 else "default"
+	sprite.play(anim)
+	
+	var aim = _aim_dir()
+	sprite.flip_h = sign(aim.x) == -1
 
 func _roll_state(delta: float):
 	velocity = velocity.move_toward(Vector2.ZERO, roll_deaccel * delta)
