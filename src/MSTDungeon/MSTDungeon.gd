@@ -34,6 +34,8 @@ func _generate() -> void:
 	rooms.queue_free()
 
 	level_builder.build_level(_rng)
+
+	queue_redraw()
 	genereated.emit()
 
 func _on_Room_sleeping_state_changed(mstRoom: MSTDungeonRoom) -> void:
@@ -45,3 +47,19 @@ func _on_Room_sleeping_state_changed(mstRoom: MSTDungeonRoom) -> void:
 
 func get_player_spawn():
 	return room_builder.get_player_spawn()
+
+
+func _draw():
+	var path = room_builder._path
+	var extra = room_builder._draw_extra
+	if path == null:
+		return
+		
+	for point1_id in path.get_point_ids():
+		var point1_position := path.get_point_position(point1_id)
+		for point2_id in path.get_point_connections(point1_id):
+			var point2_position := path.get_point_position(point2_id)
+			draw_line(point1_position, point2_position, Color.RED, 20)
+	if not extra.is_empty():
+		for pair in extra:
+			draw_line(pair[0], pair[1], Color.GREEN, 20)

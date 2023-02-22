@@ -9,11 +9,11 @@ const OBSTACLE_SPAWN_CHANCE = 0.03
 
 const FLOOR_ID = 2
 const FLOOR_TILES = {
-	0.7: Vector2i(0, 0),
-	0.75: Vector2i(1, 0),
-	0.85: Vector2i(2, 0),
-	0.86: Vector2i(0, 1),
-	0.95: Vector2i(1, 1),
+	0.8: Vector2i(0, 0),
+	0.9: Vector2i(1, 0),
+	0.97: Vector2i(2, 0),
+	0.98: Vector2i(0, 1),
+	0.99: Vector2i(1, 1),
 	1.00: Vector2i(2, 1),
 }
 const FLOOR_LAYER = 0

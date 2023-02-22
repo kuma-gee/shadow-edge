@@ -20,6 +20,7 @@ var _level_data := {}
 var _room_data = {}
 var _rooms: Array[Node]
 var _mean_room_size := Vector2.ZERO
+var _draw_extra := []
 
 var _rng: RandomNumberGenerator
 var _path: AStar2D
@@ -81,6 +82,9 @@ func build_room_data(rng: RandomNumberGenerator):
 				and _rng.randf() < reconnection_factor
 			):
 				_path.connect_points(point1_id, point2_id)
+				_draw_extra.push_back(
+					[_path.get_point_position(point1_id), _path.get_point_position(point2_id)]
+				)
 
 	for room in main_rooms:
 		_add_room(room)
@@ -101,9 +105,10 @@ func build_room_data(rng: RandomNumberGenerator):
 		end_rooms.erase(exit)
 
 		var max_treasure_rooms = floor(end_rooms.size() / 2)
-		for i in range(0, _rng.randi_range(1, max_treasure_rooms)):
-			var rand_id = end_rooms[_rng.randi() % end_rooms.size()]
-			_room_data[rand_id]["type"] = RoomType.Treasure
+		if max_treasure_rooms > 0:
+			for i in range(0, _rng.randi_range(1, max_treasure_rooms)):
+				var rand_id = end_rooms[_rng.randi() % end_rooms.size()]
+				_room_data[rand_id]["type"] = RoomType.Treasure
 	else:
 		_logger.debug("Failed to find spawn and exit position")
 
