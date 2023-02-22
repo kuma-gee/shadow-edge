@@ -2,34 +2,20 @@ extends Node2D
 
 signal genereated
 
-const OBSTACLES = {
-	0.2: preload("res://src/MSTDungeon/hole.tscn"),
-	1.0: preload("res://src/MSTDungeon/spikes.tscn"),
-}
-const OBSTACLE_SPAWN_CHANCE = 0.03
-
 const Room := preload("Room.tscn")
-const FLOOR_ID = 2
-const FLOOR_TILES = {
-	0.7: Vector2i(0, 0),
-	0.75: Vector2i(1, 0),
-	0.85: Vector2i(2, 0),
-	0.86: Vector2i(0, 1),
-	0.95: Vector2i(1, 1),
-	1.00: Vector2i(2, 1),
-}
-const FLOOR_LAYER = 0
 
 @export var max_rooms := 60
-@export var reconnection_factor := 0.025
+@export var level: TileMap
+@export var rooms: Node2D
+
+@export_node_path var room_builder_path: NodePath
+@onready var room_builder: RoomBuilder = get_node(room_builder_path)
+
+@export_node_path var level_builder_path: NodePath
+@onready var level_builder: LevelBuilder = get_node(level_builder_path)
 
 var _rng := RandomNumberGenerator.new()
 var _sleeping_rooms := 0
-var _mean_room_size := Vector2.ZERO
-var _draw_extra := []
-
-@onready var rooms: Node2D = $Rooms
-@onready var level: TileMap = $Level
 
 var _logger = Logger.new("MSTDungeon")
 
@@ -37,19 +23,6 @@ func _ready() -> void:
 	_rng.randomize()
 	_generate()
 	
-func _on_Room_sleeping_state_changed(mstRoom: MSTDungeonRoom) -> void:
-	_sleeping_rooms += 1
-	if _sleeping_rooms < max_rooms:
-		return
-
-	var main_rooms := []
-	for room in rooms.get_children():
-		if _is_main_room(room):
-			main_rooms.push_back(room)
-    
-    # TODO: room builder
-    # TODO: emit rooms built
-
 func _generate() -> void:
 	for _i in range(max_rooms):
 		var room: MSTDungeonRoom = Room.instantiate()
@@ -57,27 +30,18 @@ func _generate() -> void:
 		room.setup(_rng, level)
 		rooms.add_child(room)
 
-		_mean_room_size += room.size
-	_mean_room_size /= rooms.get_child_count()
-
-    # TODO: await rooms built
+	await room_builder.rooms_built
 	rooms.queue_free()
 
-    # TODO: level builder
-	
-	queue_redraw()
+	level_builder.build_level(_rng)
 	genereated.emit()
-		
-func _draw():
-	if _path == null:
+
+func _on_Room_sleeping_state_changed(mstRoom: MSTDungeonRoom) -> void:
+	_sleeping_rooms += 1
+	if _sleeping_rooms < max_rooms:
 		return
 
-	for point1_id in _path.get_point_ids():
-		var point1_position := _path.get_point_position(point1_id)
-		for point2_id in _path.get_point_connections(point1_id):
-			var point2_position := _path.get_point_position(point2_id)
-			draw_line(point1_position, point2_position, Color.RED, 20)
+	room_builder.build_room_data(_rng)
 
-	if not _draw_extra.is_empty():
-		for pair in _draw_extra:
-			draw_line(pair[0], pair[1], Color.GREEN, 20)
+func get_player_spawn():
+	return room_builder.get_player_spawn()

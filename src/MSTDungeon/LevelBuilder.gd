@@ -23,33 +23,27 @@ const WALL_TERRAIN = 0
 
 const WALL_SIZE = Vector2i(20, 20)
 
+@export var level: TileMap
 
-@export_node_path level_path
-@onready var level := get_node(level_path)
+@export_node_path var room_builder_path: NodePath
+@onready var room_builder: RoomBuilder = get_node(room_builder_path)
 
 var _obstacles := {}
 var _rng: RandomNumberGenerator
 
-func build_level(room_builder: RoomBuilder, rng: RandomNumberGenerator):
-    _rng = rng
-
-	var total_weight = 0.0
-	var accum_weights = {}
-	
-	for pos in FLOOR_TILES:
-		total_weight += FLOOR_TILES[pos]
-		accum_weights[pos] = total_weight
+func build_level(rng: RandomNumberGenerator):
+	_rng = rng
 	
 	level.clear()
-	for point in _data:
+	for point in room_builder.get_level_tiles():
 		var selected = _random_item(FLOOR_TILES)
 		level.set_cell(FLOOR_LAYER, point, FLOOR_ID, selected)
 	
-	for point in _obstacles:
-		var selected = _random_item(OBSTACLES) as PackedScene
-		var obstacle = selected.instantiate()
-		level.add_child(obstacle)
-		obstacle.position = level.map_to_local(point) + Vector2(level.tile_set.tile_size / 4)
+	# for point in _obstacles:
+	# 	var selected = _random_item(OBSTACLES) as PackedScene
+	# 	var obstacle = selected.instantiate()
+	# 	level.add_child(obstacle)
+	# 	obstacle.position = level.map_to_local(point) + Vector2(level.tile_set.tile_size / 4)
 	
 	_fill_walls()
 
@@ -75,6 +69,4 @@ func _random_item(weighted_items: Dictionary):
 	for chance in weighted_items:
 		if rand_num < chance:
 			return weighted_items[chance]
-			
-	print(rand_num)
 

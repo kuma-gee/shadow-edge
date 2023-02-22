@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://kt3wfep3p7sh"]
+[gd_scene load_steps=10 format=3 uid="uid://kt3wfep3p7sh"]
 
 [ext_resource type="Script" path="res://src/MSTDungeon/MSTDungeon.gd" id="2"]
 [ext_resource type="Script" path="res://src/MSTDungeon/LegacyTileMap.gd" id="3_4kjf5"]
 [ext_resource type="Texture2D" uid="uid://c4y5dygvm7hxg" path="res://assets/Background_32.png" id="3_8odk6"]
 [ext_resource type="Texture2D" uid="uid://cg5wwg30aclsc" path="res://assets/Floor_32.png" id="4_i6m35"]
+[ext_resource type="Script" path="res://src/MSTDungeon/RoomBuilder.gd" id="5_cxfg7"]
+[ext_resource type="Script" path="res://src/MSTDungeon/LevelBuilder.gd" id="6_8grbq"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kg22l"]
 texture = ExtResource("3_8odk6")
@@ -519,10 +521,13 @@ terrain_set_0/terrain_0/color = Color(0.137255, 0.462745, 0.792157, 1)
 sources/1 = SubResource("TileSetAtlasSource_kg22l")
 sources/2 = SubResource("TileSetAtlasSource_owd1y")
 
-[node name="MSTDungeon" type="Node2D"]
+[node name="MSTDungeon" type="Node2D" node_paths=PackedStringArray("level", "rooms")]
 script = ExtResource("2")
 max_rooms = 10
-reconnection_factor = 0.0
+level = NodePath("Level")
+rooms = NodePath("Rooms")
+room_builder_path = NodePath("RoomBuilder")
+level_builder_path = NodePath("LevelBuilder")
 
 [node name="Level" type="TileMap" parent="."]
 show_behind_parent = true
@@ -534,3 +539,13 @@ layer_0/tile_data = PackedInt32Array(-3, 524289, 0, 65533, 524289, 3, 65534, 720
 script = ExtResource("3_4kjf5")
 
 [node name="Rooms" type="Node2D" parent="."]
+
+[node name="RoomBuilder" type="Node" parent="." node_paths=PackedStringArray("level", "rooms")]
+script = ExtResource("5_cxfg7")
+level = NodePath("../Level")
+rooms = NodePath("../Rooms")
+
+[node name="LevelBuilder" type="Node" parent="." node_paths=PackedStringArray("level")]
+script = ExtResource("6_8grbq")
+level = NodePath("../Level")
+room_builder_path = NodePath("../RoomBuilder")
