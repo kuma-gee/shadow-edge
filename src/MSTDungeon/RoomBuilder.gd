@@ -10,7 +10,7 @@ enum RoomType {
 	Player,
 }
 
-@export var reconnection_factor := 0.025
+@export var reconnection_factor := 0.0
 @export var level: TileMap
 @export var rooms: Node2D
 
@@ -254,4 +254,5 @@ func _add_corridor_point(point: Vector2, axis: int):
 		_level_data[p] = null
 
 func _is_main_room(room: MSTDungeonRoom) -> bool:
-	return room.size.x > _mean_room_size.x and room.size.y > _mean_room_size.y
+	return true
+	#return room.size.x > _mean_room_size.x and room.size.y > _mean_room_size.y

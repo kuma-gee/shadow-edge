@@ -59,7 +59,15 @@ func _draw():
 		var point1_position := path.get_point_position(point1_id)
 		for point2_id in path.get_point_connections(point1_id):
 			var point2_position := path.get_point_position(point2_id)
-			draw_line(point1_position, point2_position, Color.RED, 20)
+			draw_line(point1_position, point2_position, Color.WHITE, 20)
+		
+		var color = Color.BLACK
+		match room_builder._room_data[point1_id]["type"]:
+			RoomBuilder.RoomType.Player: color = Color.BLUE
+			RoomBuilder.RoomType.Boss: color = Color.RED
+			RoomBuilder.RoomType.Treasure: color = Color.GREEN
+		draw_circle(point1_position, 10, color)
+			
 	if not extra.is_empty():
 		for pair in extra:
-			draw_line(pair[0], pair[1], Color.GREEN, 20)
+			draw_line(pair[0], pair[1], Color.YELLOW, 20)
