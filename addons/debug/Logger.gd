@@ -29,9 +29,9 @@ func trace(msg: String):
 
 func _log_for_level(level: int, msg: String):
 	if level <= Debug.log_level:
-        var msg = "[%s - %s]: %s" % [_now(), name, msg]
-		print(msg)
-        Debug.print_line(msg)
+		var text = "[%s - %s]: %s" % [_now(), name, msg]
+		print(text)
+		Debug.print_line(text)
 
 
 func _now() -> String:

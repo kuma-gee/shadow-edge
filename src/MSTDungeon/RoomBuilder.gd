@@ -41,10 +41,10 @@ func get_exit_room():
 
 
 func get_rooms():
-    var result = []
-    for id in _room_data:
-        result.append(_path.get_point_position(id))
-    return result
+	var result = []
+	for id in _room_data:
+		result.append(_path.get_point_position(id))
+	return result
 
 
 func get_room_size_in_tiles(pos: Vector2):
