@@ -40,12 +40,11 @@ func get_exit_room():
 	return _find_by_type(RoomType.Boss)[0]
 
 
-func get_treasure_rooms():
-	return _find_by_type(RoomType.Treasure)
-
-
-func get_normal_rooms():
-	return _find_by_type(RoomType.Normal)
+func get_rooms():
+    var result = []
+    for id in _room_data:
+        result.append(_path.get_point_position(id))
+    return result
 
 
 func get_room_size_in_tiles(pos: Vector2):
