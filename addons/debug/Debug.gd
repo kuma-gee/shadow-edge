@@ -34,7 +34,7 @@ var _commands = {
 		"action": func(x): _logging_cmd(x)
 	},
 	"/zoom": {
-		"desc": "Toggle the window zoom mode",
+		"desc": "Set zoom of camera. Call without arguments to reset to original zoom",
 		"action": func(x): _zoom_cmd(x)
 	}
 }
@@ -104,12 +104,18 @@ func _logging_cmd(args: Array[String] = []):
 
 
 func _zoom_cmd(args: Array[String] = []):
-	if not _original_zoom:
-		_original_zoom = ProjectSettings.get(WINDOW_STRETCH)
-		ProjectSettings.set(WINDOW_STRETCH, "disabled")
-		print_line("Disabled window zoom")
+	var cam = get_viewport().get_camera_2d()
+	if args.size() == 0:
+		if _original_zoom != null:
+			cam.zoom = Vector2(_original_zoom, _original_zoom)
+			_original_zoom = null
+		print_line("Restore camera zoom to %s" % _original_zoom)
 	else:
-		ProjectSettings.set(WINDOW_STRETCH, _original_zoom)
-		_original_zoom = null
-		print_line("Restored window zoom")
-
+		if args[0].is_valid_float():
+			var zoom = float(args[0])
+			if _original_zoom == null:
+				_original_zoom = cam.zoom.x
+			cam.zoom = Vector2(zoom, zoom)
+			print_line("Set camera zoom to %s" % zoom)
+		else:
+			print_line("Invalid zoom value for camera: %s" % args[0])
