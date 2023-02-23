@@ -1,6 +1,10 @@
 class_name LevelBuilder
 extends Node
 
+const ENEMIES = [
+	preload("res://src/enemy/enemy.tscn")
+]
+
 const OBSTACLES = {
 	0.2: preload("res://src/MSTDungeon/hole.tscn"),
 	1.0: preload("res://src/MSTDungeon/spikes.tscn"),
@@ -26,10 +30,15 @@ const WALL_TERRAIN_SET = 0
 const WALL_TERRAIN = 0
 const WALL_SIZE = Vector2i(20, 20)
 
+@export var max_treasures := 4
+@export var max_enemies := 20
+@export var max_obstacles := 10
+
 @export var level: TileMap
 
 @export_node_path var room_builder_path: NodePath
 @onready var room_builder: RoomBuilder = get_node(room_builder_path)
+
 
 var _obstacles := {}
 var _rng: RandomNumberGenerator
@@ -38,23 +47,41 @@ func build_level(rng: RandomNumberGenerator):
 	_rng = rng
 	
 	level.clear()
-	for point in room_builder.get_level_tiles():
+	var floor_tiles: Array[Vector2]= room_builder.get_level_tiles()
+	for point in floor_tiles:
 		var selected = _random_item(FLOOR_TILES)
 		level.set_cell(FLOOR_LAYER, point, FLOOR_ID, selected)
 	
-	for room_pos in room_builder.get_rooms():
-		var size = room_builder.get_room_size_in_tiles(room_pos)
-		var area = size.x * size.y
-		var map_pos = level.local_to_map(room_pos)
-
-		var max_obstacles_count = area * MAX_OBSTACLES_IN_ROOM_REL
-		var max_enemies_count = area * MAX_OBSTACLES_IN_ROOM_REL
-
-		for enemy_i in range(MIN_ENEMIES_IN_ROOM, max(MIN_ENEMIES_IN_ROOM, max_enemies_count)):
-			pass
-
-		for obstacle_i in range(0, max_obstacles_count):
-			pass
+	floor_tiles.shuffle()
+	
+	# TODO: not too close to player
+	# TODO: not too close to wall
+	
+	var enemies_spawned = 0
+	while enemies_spawned < max_enemies and floor_tiles:
+		var cell = floor_tiles.pop_back()
+		_spawn(ENEMIES[0], cell)
+		enemies_spawned += 1
+		
+	var obstacles_spawned = 0
+	while obstacles_spawned < max_obstacles and floor_tiles:
+		var cell = floor_tiles.pop_back()
+		_spawn(_random_item(OBSTACLES), cell)
+		obstacles_spawned += 1
+	
+#	for room_pos in room_builder.get_rooms():
+#		var size = room_builder.get_room_size_in_tiles(room_pos)
+#		var area = size.x * size.y
+#		var map_pos = level.local_to_map(room_pos)
+#
+#		var max_obstacles_count = area * MAX_OBSTACLES_IN_ROOM_REL
+#		var max_enemies_count = area * MAX_OBSTACLES_IN_ROOM_REL
+#
+#		for enemy_i in range(MIN_ENEMIES_IN_ROOM, max(MIN_ENEMIES_IN_ROOM, max_enemies_count)):
+#			pass
+#
+#		for obstacle_i in range(0, max_obstacles_count):
+#			pass
 	
 	# for point in _obstacles:
 	# 	var selected = _random_item(OBSTACLES) as PackedScene

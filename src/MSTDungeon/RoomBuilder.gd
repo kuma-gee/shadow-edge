@@ -3,12 +3,12 @@ extends Node
 
 signal rooms_built
 
-enum RoomType {
-	Normal,
-	Boss,
-	Treasure,
-	Player,
-}
+#enum RoomType {
+#	Normal,
+#	Boss,
+#	Treasure,
+#	Player,
+#}
 
 @export var reconnection_factor := 0.0
 @export var level: TileMap
@@ -25,34 +25,34 @@ var _draw_extra := []
 var _rng: RandomNumberGenerator
 var _path: AStar2D
 
-func get_level_tiles():
-	var result = []
+func get_level_tiles() -> Array[Vector2]:
+	var result: Array[Vector2] = []
 	for pos in _level_data:
 		result.append(pos)
 	return result
 
 
-func get_player_spawn():
-	return _find_by_type(RoomType.Player)[0]
-
-
-func get_exit_room():
-	return _find_by_type(RoomType.Boss)[0]
-
-
-func get_rooms():
-	var result = []
-	for id in _room_data:
-		result.append(_path.get_point_position(id))
-	return result
-
-
-func get_room_size_in_tiles(pos: Vector2):
-	var id = _find_by_pos(pos)
-	if id == null:
-		_logger.debug("Could not find room id by position %s" % pos)
-
-	return _room_data[id]["size"]
+#func get_player_spawn():
+#	return _find_by_type(RoomType.Player)[0]
+#
+#
+#func get_exit_room():
+#	return _find_by_type(RoomType.Boss)[0]
+#
+#
+#func get_rooms():
+#	var result = []
+#	for id in _room_data:
+#		result.append(_path.get_point_position(id))
+#	return result
+#
+#
+#func get_room_size_in_tiles(pos: Vector2):
+#	var id = _find_by_pos(pos)
+#	if id == null:
+#		_logger.debug("Could not find room id by position %s" % pos)
+#
+#	return _room_data[id]["size"]
 
 
 func build_room_data(rng: RandomNumberGenerator):
@@ -89,94 +89,94 @@ func build_room_data(rng: RandomNumberGenerator):
 		_add_room(room)
 	_add_corridors()
 
-	_init_room_data()
-
-	var end_rooms = _get_end_rooms(_room_data)
-	var farthest_connected = _get_farthest_connected(end_rooms)
-
-	if farthest_connected.size() > 0:
-		var player = farthest_connected[0]
-		var exit = farthest_connected[1]
-		_room_data[player]["type"] = RoomType.Player
-		_room_data[exit]["type"] = RoomType.Boss
-
-		end_rooms.erase(player)
-		end_rooms.erase(exit)
-
-		var max_treasure_rooms = floor(end_rooms.size() / 2)
-		if max_treasure_rooms > 0:
-			for i in range(0, _rng.randi_range(1, max_treasure_rooms)):
-				var rand_id = end_rooms[_rng.randi() % end_rooms.size()]
-				_room_data[rand_id]["type"] = RoomType.Treasure
-	else:
-		_logger.debug("Failed to find spawn and exit position")
+#	_init_room_data()
+#
+#	var end_rooms = _get_end_rooms(_room_data)
+#	var farthest_connected = _get_farthest_connected(end_rooms)
+#
+#	if farthest_connected.size() > 0:
+#		var player = farthest_connected[0]
+#		var exit = farthest_connected[1]
+#		_room_data[player]["type"] = RoomType.Player
+#		_room_data[exit]["type"] = RoomType.Boss
+#
+#		end_rooms.erase(player)
+#		end_rooms.erase(exit)
+#
+#		var max_treasure_rooms = floor(end_rooms.size() / 2)
+#		if max_treasure_rooms > 0:
+#			for i in range(0, _rng.randi_range(1, max_treasure_rooms)):
+#				var rand_id = end_rooms[_rng.randi() % end_rooms.size()]
+#				_room_data[rand_id]["type"] = RoomType.Treasure
+#	else:
+#		_logger.debug("Failed to find spawn and exit position")
 
 	rooms_built.emit()
 
-func _init_room_data():
-	for id in _path.get_point_ids():
-		var pos = _path.get_point_position(id)
-		var room = _find_room_for_position(pos)
-		if room == null:
-			_logger.debug("No room found for position %s" % pos)
-			continue
-		
-		var connections = _path.get_point_connections(id)
-		var first_conn = connections.size()
+#func _init_room_data():
+#	for id in _path.get_point_ids():
+#		var pos = _path.get_point_position(id)
+#		var room = _find_room_for_position(pos)
+#		if room == null:
+#			_logger.debug("No room found for position %s" % pos)
+#			continue
+#
+#		var connections = _path.get_point_connections(id)
+#		var first_conn = connections.size()
+#
+#		# var second_conn = 0
+#		# for c in connections:
+#		# 	second_conn += _path.get_point_connections(c).size()
+#
+#		_room_data[id] = {
+#			"type": RoomType.Normal,
+#			"size": room.size,
+#			"immediate_conn": first_conn,
+#			# "total_conn": first_conn + second_conn
+#		}
 
-		# var second_conn = 0
-		# for c in connections:
-		# 	second_conn += _path.get_point_connections(c).size()
-
-		_room_data[id] = {
-			"type": RoomType.Normal,
-			"size": room.size,
-			"immediate_conn": first_conn,
-			# "total_conn": first_conn + second_conn
-		}
-
-func _find_room_for_position(pos: Vector2):
-	for room in _rooms:
-		if room.position == pos:
-			return room
-	return null
-
-func _get_farthest_connected(ids):
-	var id_pair = []
-	var max_distance = -1
-
-	for id in ids:
-		for other_id in ids:
-			if id == other_id:
-				continue
-			
-			var points = _path.get_point_path(id, other_id)
-			if points.size() > max_distance:
-				id_pair = [id, other_id]
-
-	return id_pair
-	
-
-func _get_end_rooms(room_data):
-	var result = []
-	for id in room_data:
-		if room_data[id]["immediate_conn"] == 1:
-			result.append(id)
-	return result
-
-
-func _find_by_type(type):
-	var result = []
-	for id in _room_data:
-		if _room_data[id]["type"] == type:
-			result.append(_path.get_point_position(id))
-	return result
-
-func _find_by_pos(pos: Vector2):
-	var result = []
-	for id in _room_data:
-		if _path.get_point_position(id) == pos:
-			return id
+#func _find_room_for_position(pos: Vector2):
+#	for room in _rooms:
+#		if room.position == pos:
+#			return room
+#	return null
+#
+#func _get_farthest_connected(ids):
+#	var id_pair = []
+#	var max_distance = -1
+#
+#	for id in ids:
+#		for other_id in ids:
+#			if id == other_id:
+#				continue
+#
+#			var points = _path.get_point_path(id, other_id)
+#			if points.size() > max_distance:
+#				id_pair = [id, other_id]
+#
+#	return id_pair
+#
+#
+#func _get_end_rooms(room_data):
+#	var result = []
+#	for id in room_data:
+#		if room_data[id]["immediate_conn"] == 1:
+#			result.append(id)
+#	return result
+#
+#
+#func _find_by_type(type):
+#	var result = []
+#	for id in _room_data:
+#		if _room_data[id]["type"] == type:
+#			result.append(_path.get_point_position(id))
+#	return result
+#
+#func _find_by_pos(pos: Vector2):
+#	var result = []
+#	for id in _room_data:
+#		if _path.get_point_position(id) == pos:
+#			return id
 
 # Adds room tile positions to `_data`.
 func _add_room(room: MSTDungeonRoom) -> void:
@@ -241,17 +241,17 @@ func _add_corridor(start: int, end: int, constant: int, axis: int) -> void:
 func _add_corridor_point(point: Vector2, axis: int):
 	var points = [point]
 
-	# match axis:
-	# 	Vector2.AXIS_X:
-	# 		points.append(Vector2(point.x, point.y + 1))
-	# 		points.append(Vector2(point.x, point.y - 1))
-	# 	Vector2.AXIS_Y:
-	# 		points.append(Vector2(point.x + 1, point.y))
-	# 		points.append(Vector2(point.x - 1, point.y))
+	match axis:
+		Vector2.AXIS_X:
+			points.append(Vector2(point.x, point.y + 1))
+			points.append(Vector2(point.x, point.y - 1))
+		Vector2.AXIS_Y:
+			points.append(Vector2(point.x + 1, point.y))
+			points.append(Vector2(point.x - 1, point.y))
 
 	for p in points:
 		_level_data[p] = null
 
 func _is_main_room(room: MSTDungeonRoom) -> bool:
-	return true
-	#return room.size.x > _mean_room_size.x and room.size.y > _mean_room_size.y
+	#return true
+	return room.size.x > _mean_room_size.x and room.size.y > _mean_room_size.y

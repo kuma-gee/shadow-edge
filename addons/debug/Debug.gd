@@ -136,3 +136,4 @@ func _zoom_cmd(args: Array[String] = []):
 func _light_cmd(args: Array[String] = []):
 	for light in get_tree().get_nodes_in_group("Light"):
 		light.visible = not light.visible
+	_zoom_cmd(["0.1"])

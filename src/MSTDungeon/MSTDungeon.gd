@@ -46,7 +46,8 @@ func _on_Room_sleeping_state_changed(mstRoom: MSTDungeonRoom) -> void:
 	room_builder.build_room_data(_rng)
 
 func get_player_spawn():
-	return room_builder.get_player_spawn()
+	return Vector2.ZERO
+	#return room_builder.get_player_spawn()
 
 
 func _draw():
@@ -61,12 +62,12 @@ func _draw():
 			var point2_position := path.get_point_position(point2_id)
 			draw_line(point1_position, point2_position, Color.WHITE, 20)
 		
-		var color = Color.BLACK
-		match room_builder._room_data[point1_id]["type"]:
-			RoomBuilder.RoomType.Player: color = Color.BLUE
-			RoomBuilder.RoomType.Boss: color = Color.RED
-			RoomBuilder.RoomType.Treasure: color = Color.GREEN
-		draw_circle(point1_position, 10, color)
+#		var color = Color.BLACK
+#		match room_builder._room_data[point1_id]["type"]:
+#			RoomBuilder.RoomType.Player: color = Color.BLUE
+#			RoomBuilder.RoomType.Boss: color = Color.RED
+#			RoomBuilder.RoomType.Treasure: color = Color.GREEN
+#		draw_circle(point1_position, 10, color)
 			
 	if not extra.is_empty():
 		for pair in extra:
