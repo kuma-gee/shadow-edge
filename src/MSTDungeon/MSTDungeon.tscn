@@ -523,7 +523,7 @@ sources/2 = SubResource("TileSetAtlasSource_owd1y")
 
 [node name="MSTDungeon" type="Node2D" node_paths=PackedStringArray("level", "rooms")]
 script = ExtResource("2")
-max_rooms = 10
+max_rooms = 50
 level = NodePath("Level")
 rooms = NodePath("Rooms")
 room_builder_path = NodePath("RoomBuilder")

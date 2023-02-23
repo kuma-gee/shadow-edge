@@ -8,7 +8,7 @@ script = ExtResource("1_aatr2")
 
 [node name="MSTDungeon" parent="." instance=ExtResource("1_w0onb")]
 
-[node name="CanvasModulate" type="CanvasModulate" parent="."]
+[node name="CanvasModulate" type="CanvasModulate" parent="." groups=["Light"]]
 color = Color(0.0980392, 0.0980392, 0.0980392, 1)
 
 [connection signal="genereated" from="MSTDungeon" to="." method="_on_mst_dungeon_genereated"]

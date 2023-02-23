@@ -36,6 +36,10 @@ var _commands = {
 	"/zoom": {
 		"desc": "Set zoom of camera. Call without arguments to reset to original zoom",
 		"action": func(x): _zoom_cmd(x)
+	},
+	"/light": {
+		"desc": "Toggle light on/off",
+		"action": func(x): _light_cmd(x)
 	}
 }
 
@@ -119,3 +123,7 @@ func _zoom_cmd(args: Array[String] = []):
 			print_line("Set camera zoom to %s" % zoom)
 		else:
 			print_line("Invalid zoom value for camera: %s" % args[0])
+
+func _light_cmd(args: Array[String] = []):
+	for light in get_tree().get_nodes_in_group("Light"):
+		light.visible = not light.visible
