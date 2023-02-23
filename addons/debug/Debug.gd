@@ -14,9 +14,11 @@ enum Level {
 const WINDOW_STRETCH = "display/window/stretch/mode"
 const APPLICATION = "application/config/name"
 
-@export var lines: Label
+@export var lines: VBoxContainer
+@export var scroll: ScrollContainer
 @export var input: LineEdit
 
+@export var max_lines := 100
 
 var log_level = Level.DEBUG
 
@@ -60,12 +62,19 @@ func _unhandled_input(event):
 
 
 func print_line(str: String):
-	lines.text += str + "\n"
+	if lines.get_child_count() >= max_lines:
+		lines.remove_child(lines.get_child(0))
+	
+	var line = Label.new()
+	line.text = str
+	lines.add_child(line)
+	scroll.scroll_vertical = scroll.get_v_scroll_bar().max_value
 
 
 func _on_text_edit_text_submitted(new_text):
-	_on_command_input(new_text)
-	input.clear()
+	if new_text != "":
+		_on_command_input(new_text)
+		input.clear()
 
 
 func _on_command_input(input: String):
