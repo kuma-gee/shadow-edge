@@ -31,6 +31,29 @@ func get_level_tiles() -> Array[Vector2]:
 		result.append(pos)
 	return result
 
+func get_end_room_positions() -> Array[Vector2]:
+    var result := []
+    var bottom_right := Vector2.ZERO
+    var top_left := Vector2.ZERO
+    var border_threshold := 5
+
+	for id in _path.get_point_ids():
+		var connections = _path.get_point_connections(id)
+        var pos = _path.get_point_position(id)
+
+        bottom_right.x = max(bottom_right.x, pos.x)
+        bottom_right.y = max(bottom_right.y, pos.y)
+        top_left.x = min(top_left.x, pos.x)
+        top_left.y = min(top_left.y, pos.y)
+
+        if connections.size() == 1:
+            result.append(pos)
+    
+    for pos in result:
+        pos.x
+
+    return result
+
 
 #func get_player_spawn():
 #	return _find_by_type(RoomType.Player)[0]
