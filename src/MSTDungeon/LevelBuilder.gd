@@ -44,38 +44,38 @@ var _obstacles := {}
 var _rng: RandomNumberGenerator
 
 func _has_wall_neighbor(cell: Vector2):
-    for neighbor in level.get_surrounding_cells(cell):
-        if level.get_cell_source_id(neighbor) != FLOOR_ID:
-            return true
-    return false;
+	for neighbor in level.get_surrounding_cells(cell):
+		if level.get_cell_source_id(FLOOR_LAYER, neighbor) != FLOOR_ID:
+			return true
+	return false;
 
 func build_level(rng: RandomNumberGenerator):
 	_rng = rng
 
-    var end_pos := room_builder.get_end_room_positions()
-    end_pos.shuffle()
+	var end_pos := room_builder.get_end_room_positions()
+	end_pos.shuffle()
 
-    # TODO: check if enough positions
+	# TODO: check if enough positions
 
-    var exit_pos := end_pos.pop_back() # TODO: check if end of tilemap
-    var player_pos := Vector2.ZERO
-    for pos in end_pos:
-        if pos.distance_to(exit_pos) > min_distance_to_exit:
-            player_pos = pos
-            break
-    
-    var exit_tile = level.map_to_local(exit_pos)
-    var player_tile = level.map_to_local(player_pos)
+	var exit_pos: Vector2 = end_pos.pop_back() # TODO: check if end of tilemap
+	var player_pos := Vector2.ZERO
+	for pos in end_pos:
+		if pos.distance_to(exit_pos) > min_distance_to_exit:
+			player_pos = pos
+			break
+	
+	var exit_tile = level.map_to_local(exit_pos)
+	var player_tile = level.map_to_local(player_pos)
 	
 	level.clear()
 	var floor_tiles: Array[Vector2] = room_builder.get_level_tiles()
-    var non_wall_floors: Array[Vector2] = []
+	var non_wall_floors: Array[Vector2] = []
 	for point in floor_tiles:
 		var selected = _random_item(FLOOR_TILES)
 		level.set_cell(FLOOR_LAYER, point, FLOOR_ID, selected)
 
-        if not _has_wall_neighbor(point):
-            non_wall_floors.append(point)
+		if not _has_wall_neighbor(point):
+			non_wall_floors.append(point)
 
 	
 	non_wall_floors.shuffle()
@@ -84,9 +84,9 @@ func build_level(rng: RandomNumberGenerator):
 	while enemies_spawned < max_enemies and non_wall_floors:
 		var cell = non_wall_floors.pop_back()
 
-        if player_tile.distance_to(cell) < min_spawn_distance_in_tiles \
-            or exit_tile.distance_to(cell) < min_spawn_distance_in_tiles:
-            continue
+		if player_tile.distance_to(cell) < min_spawn_distance_in_tiles \
+			or exit_tile.distance_to(cell) < min_spawn_distance_in_tiles:
+			continue
 
 		_spawn(ENEMIES[0], cell)
 		enemies_spawned += 1
@@ -95,9 +95,9 @@ func build_level(rng: RandomNumberGenerator):
 	while obstacles_spawned < max_obstacles and non_wall_floors:
 		var cell = non_wall_floors.pop_back()
 
-        if player_tile.distance_to(cell) < min_spawn_distance_in_tiles \
-            or exit_tile.distance_to(cell) < min_spawn_distance_in_tiles:
-            continue
+		if player_tile.distance_to(cell) < min_spawn_distance_in_tiles \
+			or exit_tile.distance_to(cell) < min_spawn_distance_in_tiles:
+			continue
 
 		_spawn(_random_item(OBSTACLES), cell)
 		obstacles_spawned += 1
