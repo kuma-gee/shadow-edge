@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3cje2xglsqk6"]
+
+[ext_resource type="Texture2D" uid="uid://djbuxlwaakxeo" path="res://assets/stairs.png" id="1_p76hp"]
+
+[node name="Exit" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_p76hp")

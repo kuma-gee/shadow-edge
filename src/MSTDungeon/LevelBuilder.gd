@@ -1,6 +1,9 @@
 class_name LevelBuilder
 extends Node
 
+const PLAYER = preload("res://src/player/player.tscn")
+const EXIT = preload("res://src/MSTDungeon/exit.tscn")
+
 const ENEMIES = [
 	preload("res://src/enemy/enemy.tscn")
 ]
@@ -28,9 +31,9 @@ const WALL_TERRAIN = 0
 const WALL_SIZE = Vector2i(20, 20)
 
 @export var max_treasures := 4
-@export var max_enemies := 20
-@export var max_obstacles := 10
-@export var min_spawn_distance_in_tiles := 8
+@export var enemies_percentage := 0.01
+@export var obstacles_percentage := 0.005
+@export var min_spawn_distance_in_tiles := 10
 
 @export var min_distance_to_exit := 100
 
@@ -42,12 +45,6 @@ const WALL_SIZE = Vector2i(20, 20)
 
 var _obstacles := {}
 var _rng: RandomNumberGenerator
-
-func _has_wall_neighbor(cell: Vector2):
-	for neighbor in level.get_surrounding_cells(cell):
-		if level.get_cell_source_id(FLOOR_LAYER, neighbor) != FLOOR_ID:
-			return true
-	return false;
 
 func build_level(rng: RandomNumberGenerator):
 	_rng = rng
@@ -64,39 +61,48 @@ func build_level(rng: RandomNumberGenerator):
 			player_pos = pos
 			break
 	
-	var exit_tile = level.map_to_local(exit_pos)
-	var player_tile = level.map_to_local(player_pos)
+	var exit_tile = Vector2(level.local_to_map(exit_pos))
+	var player_tile = Vector2(level.local_to_map(player_pos))
+	
+	var exit_node = EXIT.instantiate()
+	exit_node.position = exit_pos
+	add_child(exit_node)
+	
+	var player_node = PLAYER.instantiate()
+	player_node.position = player_pos
+	add_child(player_node)
 	
 	level.clear()
 	var floor_tiles: Array[Vector2] = room_builder.get_level_tiles()
-	var non_wall_floors: Array[Vector2] = []
 	for point in floor_tiles:
 		var selected = _random_item(FLOOR_TILES)
 		level.set_cell(FLOOR_LAYER, point, FLOOR_ID, selected)
 
-		if not _has_wall_neighbor(point):
-			non_wall_floors.append(point)
-
 	
-	non_wall_floors.shuffle()
+	floor_tiles.shuffle()
+	var total_floors = floor_tiles.size()
+	print("Total floors: %s" % total_floors)
 	
+	var max_enemies = total_floors * enemies_percentage
+	print("Max enemies: %s" % max_enemies)
 	var enemies_spawned = 0
-	while enemies_spawned < max_enemies and non_wall_floors:
-		var cell = non_wall_floors.pop_back()
+	while enemies_spawned < max_enemies and floor_tiles:
+		var cell = floor_tiles.pop_back()
 
-		if player_tile.distance_to(cell) < min_spawn_distance_in_tiles \
-			or exit_tile.distance_to(cell) < min_spawn_distance_in_tiles:
+		if player_tile.distance_to(cell) < min_spawn_distance_in_tiles:
 			continue
 
 		_spawn(ENEMIES[0], cell)
 		enemies_spawned += 1
-		
+	
+	var max_obstacles = total_floors * obstacles_percentage
+	print("Max obstacles: %s" % max_obstacles)
+	
 	var obstacles_spawned = 0
-	while obstacles_spawned < max_obstacles and non_wall_floors:
-		var cell = non_wall_floors.pop_back()
+	while obstacles_spawned < max_obstacles and floor_tiles:
+		var cell = floor_tiles.pop_back()
 
-		if player_tile.distance_to(cell) < min_spawn_distance_in_tiles \
-			or exit_tile.distance_to(cell) < min_spawn_distance_in_tiles:
+		if player_tile.distance_to(cell) < min_spawn_distance_in_tiles:
 			continue
 
 		_spawn(_random_item(OBSTACLES), cell)

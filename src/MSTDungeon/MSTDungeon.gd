@@ -20,6 +20,7 @@ var _sleeping_rooms := 0
 var _logger = Logger.new("MSTDungeon")
 
 func _ready() -> void:
+	randomize()
 	_rng.randomize()
 	_generate()
 	
@@ -44,10 +45,6 @@ func _on_Room_sleeping_state_changed(mstRoom: MSTDungeonRoom) -> void:
 		return
 
 	room_builder.build_room_data(_rng)
-
-func get_player_spawn():
-	return Vector2.ZERO
-	#return room_builder.get_player_spawn()
 
 
 func _draw():

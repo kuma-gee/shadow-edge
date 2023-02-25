@@ -32,7 +32,7 @@ func get_level_tiles() -> Array[Vector2]:
 	return result
 
 func get_end_room_positions() -> Array[Vector2]:
-	var result := []
+	var result: Array[Vector2]= []
 	var bottom_right := Vector2.ZERO
 	var top_left := Vector2.ZERO
 	var border_threshold := 5
@@ -49,8 +49,8 @@ func get_end_room_positions() -> Array[Vector2]:
 		if connections.size() == 1:
 			result.append(pos)
 	
-	for pos in result:
-		pos.x
+#	for pos in result:
+#		pos.x
 
 	return result
 
